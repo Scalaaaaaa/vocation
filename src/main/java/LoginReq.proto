@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "com.bear.vocation.netty.common";
+option java_outer_classname = "LoginReqWrapper";
+// /Users/yangyiyun/IdeaProjects/vocation/src/main/java
+message LoginReq{
+  string userName = 1;
+  string md5Pwd = 2;
+}

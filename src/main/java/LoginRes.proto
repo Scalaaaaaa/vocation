@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "com.bear.vocation.netty.common";
+option java_outer_classname = "LoginResWrapper";
+
+message LoginRes{
+  bool isSuccess = 1;
+  string msg = 2;
+}
