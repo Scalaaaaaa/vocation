@@ -52,18 +52,27 @@ public class MenuThread extends Thread{
         }
         // 登录成功后,跳出上面的循环, 展示业务菜单,并用scanner等待输入
         while (notQuit) {
-            log.info("search [username*]");
-            log.info("add [username]");
-            log.info("send [username] [msg]");
+            /*log.info("search [username*]");
+            log.info("add [username]");*/
+            log.info("send-username-msg");
+            log.info("createGroup-groupName");
+            log.info("addToGroup-groupName-username");
+            log.info("sendGroup-groupName-msg");
             String originCmd = scanner.nextLine();
+            System.out.println("originCmd=" + originCmd);
             String[] cmd = originCmd.split("-");
-            log.info("cmdReceived {}, {}, {}, {}",originCmd, cmd[0],cmd[1],cmd[2]);
             switch (cmd[0]) {
                 case "send":
                     sendToUser(cmd[1], cmd[2]);
                     break;
+                case "createGroup":
+                    createGroup(cmd[1]);
+                    break;
+                case "addToGroup":
+                    addToGroup(cmd[1], cmd[2]);
+                    break;
                 case "sendGroup":
-
+                    sendGroup(cmd[1], cmd[2]);
                     break;
                 case "Q":
                     notQuit = false;
@@ -86,5 +95,33 @@ public class MenuThread extends Thread{
                         .build()).build();
         channel.writeAndFlush(req);
         log.info("sendToUserSuccess {}",req);
+    }
+
+    public void createGroup(String groupName) {
+        CommonReqWrapper.CreateGroupReq req = CommonReqWrapper.CreateGroupReq.newBuilder()
+                .setGroupName(groupName)
+                .setUsername(username).build();
+
+        channel.writeAndFlush(CommonReqWrapper.CommonReq.newBuilder()
+                .setDataType(CommonReqWrapper.CommonReq.DataType.CreateGroupReqType)
+                .setCreateGroupReq(req).build());
+    }
+    public void addToGroup(String groupName, String username){
+        CommonReqWrapper.AddToGroupReq req = CommonReqWrapper.AddToGroupReq.newBuilder()
+                .setGroupName(groupName)
+                .setUsername(username)
+                .build();
+        channel.writeAndFlush(CommonReqWrapper.CommonReq.newBuilder()
+                .setDataType(CommonReqWrapper.CommonReq.DataType.AddToGroupReqType)
+                .setAddToGroup(req).build());
+    }
+    public void sendGroup(String groupName, String content){
+        CommonReqWrapper.SendToGroupReq req = CommonReqWrapper.SendToGroupReq.newBuilder()
+                .setContent(content)
+                .setGroupName(groupName)
+                .setUsername(username).build();
+        channel.writeAndFlush(CommonReqWrapper.CommonReq.newBuilder()
+                .setDataType(CommonReqWrapper.CommonReq.DataType.SendToGroupReqType)
+                .setSendToGroup(req).build());
     }
 }

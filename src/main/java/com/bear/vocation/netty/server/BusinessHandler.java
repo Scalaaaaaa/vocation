@@ -13,8 +13,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.bear.vocation.netty.common.Constants.*;
+
 // 当某handler是处理业务消息时, 继承SimpleChannelInboundHandler
 // 当某handler是处理连接/断开事件时, 继承ChannelInboundHandlerAdapter
 @ChannelHandler.Sharable
@@ -25,22 +28,8 @@ public class BusinessHandler extends SimpleChannelInboundHandler<CommonReqWrappe
 
     public static volatile Map<Channel, String> ONLINE_CHANNELS = new ConcurrentHashMap<>();
 
-    private static CommonResWrapper.CommonRes LOGIN_SUCCESS = CommonResWrapper.CommonRes.newBuilder()
-            .setDataType(CommonResWrapper.CommonRes.DataType.StatusType)
-            .setStatus(CommonResWrapper.CommonRes.Status.newBuilder()
-                    .setCode(0)
-                    .setMsg("")
-                    .setStatusType(CommonResWrapper.CommonRes.Status.ReqTp.Login)
-                    .build())
-            .build();
-    private static CommonResWrapper.CommonRes SENDMSG_SUCCESS = CommonResWrapper.CommonRes.newBuilder()
-            .setDataType(CommonResWrapper.CommonRes.DataType.StatusType)
-            .setStatus(CommonResWrapper.CommonRes.Status.newBuilder()
-                    .setCode(0)
-                    .setMsg("")
-                    .setStatusType(CommonResWrapper.CommonRes.Status.ReqTp.Login)
-                    .build())
-            .build();
+    public static volatile Map<String, Set<String>> GROUP_USERS = new ConcurrentHashMap<>();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx,CommonReqWrapper.CommonReq req) throws Exception {
         log.info("reveivedRequest {}", req);
@@ -69,6 +58,44 @@ public class BusinessHandler extends SimpleChannelInboundHandler<CommonReqWrappe
                 // 回复给自己,表示发送成功
                 ctx.writeAndFlush(SENDMSG_SUCCESS);
                 log.info("writeSendToUser {}", res);
+            }
+        } else if (req.getDataType() == CommonReqWrapper.CommonReq.DataType.CreateGroupReqType) {
+            CommonReqWrapper.CreateGroupReq groupInfo = req.getCreateGroupReq();
+            if (GROUP_USERS.get(groupInfo.getGroupName()) == null) {
+                Set<String> users = new HashSet<>();
+                users.add(groupInfo.getUsername());
+                GROUP_USERS.put(groupInfo.getGroupName(), users);
+                ctx.writeAndFlush(CREATE_GROUP_SUCCESS);
+            }else{
+                ctx.writeAndFlush(GROUP_EXISTS);
+            }
+        } else if (req.getDataType() == CommonReqWrapper.CommonReq.DataType.AddToGroupReqType) {
+            CommonReqWrapper.AddToGroupReq addToGroup = req.getAddToGroup();
+            if (GROUP_USERS.get(addToGroup.getGroupName()) == null) {
+                ctx.writeAndFlush(GROUP_NOT_EXISTS);
+            }else{
+                GROUP_USERS.get(addToGroup.getGroupName()).add(addToGroup.getUsername());
+                ctx.writeAndFlush(ADD_TO_GROUP_SUCCESS);
+            }
+        }else if (req.getDataType() == CommonReqWrapper.CommonReq.DataType.SendToGroupReqType) {
+            CommonReqWrapper.SendToGroupReq sendToGroup = req.getSendToGroup();
+            if (GROUP_USERS.get(sendToGroup.getGroupName()) == null) {
+                ctx.writeAndFlush(GROUP_NOT_EXISTS);
+            }else{
+                GROUP_USERS.get(sendToGroup.getGroupName()).forEach(username ->{
+                    Channel channel = ONLINE_USERS.get(username);
+                    if(channel != null){
+                        CommonResWrapper.CommonRes sendRes = CommonResWrapper.CommonRes.newBuilder()
+                                .setDataType(CommonResWrapper.CommonRes.DataType.RecvFromGroupType)
+                                .setRecvFromGroup(CommonResWrapper.CommonRes.RecvFromGroup.newBuilder()
+                                        .setFromUsername(sendToGroup.getUsername())
+                                        .setContent(sendToGroup.getContent())
+                                        .setGroupName(sendToGroup.getGroupName()).build())
+                                .build();
+                        channel.writeAndFlush(sendRes);
+                        ctx.writeAndFlush(SENDMSG_SUCCESS);
+                    }
+                });
             }
         }
     }

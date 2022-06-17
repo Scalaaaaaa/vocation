@@ -3502,6 +3502,18 @@ public final class CommonReqWrapper {
      */
     com.google.protobuf.ByteString
         getGroupNameBytes();
+
+    /**
+     * <code>string username = 2;</code>
+     * @return The username.
+     */
+    java.lang.String getUsername();
+    /**
+     * <code>string username = 2;</code>
+     * @return The bytes for username.
+     */
+    com.google.protobuf.ByteString
+        getUsernameBytes();
   }
   /**
    * Protobuf type {@code CreateGroupReq}
@@ -3517,6 +3529,7 @@ public final class CommonReqWrapper {
     }
     private CreateGroupReq() {
       groupName_ = "";
+      username_ = "";
     }
 
     @java.lang.Override
@@ -3553,6 +3566,12 @@ public final class CommonReqWrapper {
               java.lang.String s = input.readStringRequireUtf8();
 
               groupName_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              username_ = s;
               break;
             }
             default: {
@@ -3627,6 +3646,44 @@ public final class CommonReqWrapper {
       }
     }
 
+    public static final int USERNAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object username_;
+    /**
+     * <code>string username = 2;</code>
+     * @return The username.
+     */
+    @java.lang.Override
+    public java.lang.String getUsername() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        username_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string username = 2;</code>
+     * @return The bytes for username.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getUsernameBytes() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        username_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3644,6 +3701,9 @@ public final class CommonReqWrapper {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(groupName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, groupName_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(username_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, username_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3655,6 +3715,9 @@ public final class CommonReqWrapper {
       size = 0;
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(groupName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, groupName_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(username_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, username_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3673,6 +3736,8 @@ public final class CommonReqWrapper {
 
       if (!getGroupName()
           .equals(other.getGroupName())) return false;
+      if (!getUsername()
+          .equals(other.getUsername())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3686,6 +3751,8 @@ public final class CommonReqWrapper {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + GROUPNAME_FIELD_NUMBER;
       hash = (53 * hash) + getGroupName().hashCode();
+      hash = (37 * hash) + USERNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getUsername().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3821,6 +3888,8 @@ public final class CommonReqWrapper {
         super.clear();
         groupName_ = "";
 
+        username_ = "";
+
         return this;
       }
 
@@ -3848,6 +3917,7 @@ public final class CommonReqWrapper {
       public com.bear.vocation.netty.common.CommonReqWrapper.CreateGroupReq buildPartial() {
         com.bear.vocation.netty.common.CommonReqWrapper.CreateGroupReq result = new com.bear.vocation.netty.common.CommonReqWrapper.CreateGroupReq(this);
         result.groupName_ = groupName_;
+        result.username_ = username_;
         onBuilt();
         return result;
       }
@@ -3898,6 +3968,10 @@ public final class CommonReqWrapper {
         if (other == com.bear.vocation.netty.common.CommonReqWrapper.CreateGroupReq.getDefaultInstance()) return this;
         if (!other.getGroupName().isEmpty()) {
           groupName_ = other.groupName_;
+          onChanged();
+        }
+        if (!other.getUsername().isEmpty()) {
+          username_ = other.username_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -4001,6 +4075,82 @@ public final class CommonReqWrapper {
   checkByteStringIsUtf8(value);
         
         groupName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object username_ = "";
+      /**
+       * <code>string username = 2;</code>
+       * @return The username.
+       */
+      public java.lang.String getUsername() {
+        java.lang.Object ref = username_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          username_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string username = 2;</code>
+       * @return The bytes for username.
+       */
+      public com.google.protobuf.ByteString
+          getUsernameBytes() {
+        java.lang.Object ref = username_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          username_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string username = 2;</code>
+       * @param value The username to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUsername(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        username_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string username = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearUsername() {
+        
+        username_ = getDefaultInstance().getUsername();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string username = 2;</code>
+       * @param value The bytes for username to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUsernameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        username_ = value;
         onChanged();
         return this;
       }
@@ -5698,13 +5848,13 @@ public final class CommonReqWrapper {
       "e\020\003\022\026\n\022SendToGroupReqType\020\004B\n\n\010dataBody\"" +
       ",\n\010LoginReq\022\020\n\010userName\030\001 \001(\t\022\016\n\006md5Pwd\030" +
       "\002 \001(\t\":\n\rSendToUserReq\022\014\n\004from\030\001 \001(\t\022\n\n\002" +
-      "to\030\002 \001(\t\022\017\n\007content\030\003 \001(\t\"#\n\016CreateGroup" +
-      "Req\022\021\n\tgroupName\030\001 \001(\t\"4\n\rAddToGroupReq\022" +
-      "\020\n\010username\030\001 \001(\t\022\021\n\tgroupName\030\002 \001(\t\"F\n\016" +
-      "SendToGroupReq\022\020\n\010username\030\001 \001(\t\022\021\n\tgrou" +
-      "pName\030\002 \001(\t\022\017\n\007content\030\003 \001(\tB4\n\036com.bear" +
-      ".vocation.netty.commonB\020CommonReqWrapper" +
-      "H\001b\006proto3"
+      "to\030\002 \001(\t\022\017\n\007content\030\003 \001(\t\"5\n\016CreateGroup" +
+      "Req\022\021\n\tgroupName\030\001 \001(\t\022\020\n\010username\030\002 \001(\t" +
+      "\"4\n\rAddToGroupReq\022\020\n\010username\030\001 \001(\t\022\021\n\tg" +
+      "roupName\030\002 \001(\t\"F\n\016SendToGroupReq\022\020\n\010user" +
+      "name\030\001 \001(\t\022\021\n\tgroupName\030\002 \001(\t\022\017\n\007content" +
+      "\030\003 \001(\tB4\n\036com.bear.vocation.netty.common" +
+      "B\020CommonReqWrapperH\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5733,7 +5883,7 @@ public final class CommonReqWrapper {
     internal_static_CreateGroupReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CreateGroupReq_descriptor,
-        new java.lang.String[] { "GroupName", });
+        new java.lang.String[] { "GroupName", "Username", });
     internal_static_AddToGroupReq_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_AddToGroupReq_fieldAccessorTable = new

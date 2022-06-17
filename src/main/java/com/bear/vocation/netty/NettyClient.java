@@ -34,7 +34,7 @@ public class NettyClient {
                  **/
                 // protobuf Codec
                 ChannelPipeline pipeline = ch.pipeline();
-                pipeline.addLast(new LoggingHandler());
+                //pipeline.addLast(new LoggingHandler());
                 pipeline.addLast(new ProtobufVarint32FrameDecoder());
                 pipeline.addLast(new ProtobufDecoder(CommonResWrapper.CommonRes.getDefaultInstance()));
                 pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());

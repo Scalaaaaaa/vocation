@@ -31,6 +31,7 @@ message SendToUserReq{
 }
 message CreateGroupReq{
   string groupName = 1;
+  string username = 2;
 }
 message AddToGroupReq{
   string username = 1;

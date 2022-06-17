@@ -39,8 +39,16 @@ public class ResHandler extends SimpleChannelInboundHandler<CommonResWrapper.Com
                 }
             }else if(commonRes.getStatus().getStatusType() == CommonResWrapper.CommonRes.Status.ReqTp.SendMsg){
                 log.info("发送消息成功....");
+            }else if(commonRes.getStatus().getStatusType() == CommonResWrapper.CommonRes.Status.ReqTp.CreateGroup){
+                log.info("创建群成功....");
+            }else if(commonRes.getStatus().getStatusType() == CommonResWrapper.CommonRes.Status.ReqTp.AddToGroup){
+                log.info("加入群成功....");
             }
             // 其他仅有状态的出参解析  比如给别人发信息时,得到的回复应该是发送成功
+        } else if (commonRes.getDataType() == CommonResWrapper.CommonRes.DataType.RecvFromGroupType) {
+            CommonResWrapper.CommonRes.RecvFromGroup data = commonRes.getRecvFromGroup();
+            log.info("[{}] 群里的  {} 给你发信息:{}",data.getGroupName(),
+                    data.getFromUsername(),data.getContent());
         }
     }
 }
