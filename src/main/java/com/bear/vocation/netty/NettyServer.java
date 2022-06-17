@@ -1,7 +1,7 @@
 package com.bear.vocation.netty;
 
-import com.bear.vocation.netty.common.LoginReqWrapper;
-import com.bear.vocation.netty.server.LoginReqHandler;
+import com.bear.vocation.netty.common.CommonReqWrapper;
+import com.bear.vocation.netty.server.BusinessHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -36,18 +36,18 @@ public class NettyServer {
             bootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
                 @Override
                 protected void initChannel(NioSocketChannel channel) throws Exception {
-                    // TODO 往pipeline增加handler
+                    // 往pipeline增加handler
                     ChannelPipeline pipeline = channel.pipeline();
-                    //pipeline.addLast(new LoggingHandler());
+                    pipeline.addLast(new LoggingHandler());
                     // TODO 等基本功能完成后, 调整成带版本号等附加信息的
                     pipeline.addLast(new ProtobufVarint32FrameDecoder());
-                    pipeline.addLast(new ProtobufDecoder(LoginReqWrapper.LoginReq.getDefaultInstance()));
+                    pipeline.addLast(new ProtobufDecoder(CommonReqWrapper.CommonReq.getDefaultInstance()));
 
                     pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
                     pipeline.addLast(new ProtobufEncoder());
                     // 自定义handler要放到所有decoder之后,decoder把bytebuf转成java对象, 自定义handler的泛型为自定义对象,
                     // netty会自动匹配自定义handler,解码出来是哪个类的对象, 就找  泛型是该类的自定义handler处理,责任链模式
-                    pipeline.addLast(new LoginReqHandler());
+                    pipeline.addLast(new BusinessHandler());
                 }
             });
             ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress("localhost", 1223));

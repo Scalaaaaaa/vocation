@@ -1,0 +1,47 @@
+syntax = "proto3";
+option java_package = "com.bear.vocation.netty.common";
+option java_outer_classname = "CommonResWrapper";
+
+message CommonRes{
+  DataType dataType = 1;
+  enum DataType{
+    StatusType = 0;
+    RecvFromUserType = 1;
+    FriendsType = 2;
+    RecvFromGroupType = 3;
+  }
+  oneof dataBody{
+    Status status = 2;
+    RecvFromUser recvFromUser = 3;
+    Friends friends = 4;
+    RecvFromGroup recvFromGroup = 5;
+  }
+
+
+  message Status{
+    // 0:成功
+    uint32 code = 1;
+    // 失败信息
+    string msg = 2;
+
+    ReqTp statusType = 3;
+    enum ReqTp{
+      Login = 0;
+      SendMsg = 1;
+      CreateGroup = 2;
+      AddToGroup = 3;
+    }
+  }
+  message Friends{
+    repeated string username = 1;
+  }
+  message RecvFromUser{
+    string from = 1;
+    string content = 2;
+  }
+  message RecvFromGroup{
+    string groupName = 1;
+    string fromUsername = 2;
+    string content = 3;
+  }
+}

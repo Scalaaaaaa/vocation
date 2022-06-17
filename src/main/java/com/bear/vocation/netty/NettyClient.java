@@ -1,11 +1,7 @@
 package com.bear.vocation.netty;
 
-import cn.hutool.crypto.digest.MD5;
-import com.bear.vocation.netty.client.ConnectSuccessHandler;
-import com.bear.vocation.netty.client.LoginResHandler;
-import com.bear.vocation.netty.client.ReadHandler;
-import com.bear.vocation.netty.common.LoginReqWrapper;
-import com.bear.vocation.netty.common.LoginResWrapper;
+import com.bear.vocation.netty.client.ResHandler;
+import com.bear.vocation.netty.common.CommonResWrapper;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -18,14 +14,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-import java.util.concurrent.locks.LockSupport;
-
 public class NettyClient {
-    public static volatile Boolean loginFail = true;
-    // 提取成变量是为了 登录成功的线程调用LockSupport.unpark(loginThread)
-    public static volatile Thread loginThread;
     public static void main(String[] args) throws InterruptedException {
         NioEventLoopGroup group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
@@ -45,13 +34,13 @@ public class NettyClient {
                  **/
                 // protobuf Codec
                 ChannelPipeline pipeline = ch.pipeline();
-                //pipeline.addLast(new LoggingHandler());
+                pipeline.addLast(new LoggingHandler());
                 pipeline.addLast(new ProtobufVarint32FrameDecoder());
-                pipeline.addLast(new ProtobufDecoder(LoginResWrapper.LoginRes.getDefaultInstance()));
+                pipeline.addLast(new ProtobufDecoder(CommonResWrapper.CommonRes.getDefaultInstance()));
                 pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
                 pipeline.addLast(new ProtobufEncoder());
-                pipeline.addLast(new ReadHandler());
-                //pipeline.addLast(new LoginResHandler());
+                // protobuf下的业务handler只有一个,因为处理参数的时候,不支持 handler->出参 的1:1关系,只支持1:n关系
+                pipeline.addLast(new ResHandler());
             }
         });
         // TODO hostname/port都放到common里共享

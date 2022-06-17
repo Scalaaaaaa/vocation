@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option optimize_for = SPEED;
+option java_package = "com.bear.vocation.netty.common";
+option java_outer_classname = "CommonReqWrapper";
+message CommonReq{
+    enum DataType{
+        LoginReqType = 0;
+        SendToUserReqType = 1;
+        CreateGroupReqType = 2;
+        AddToGroupReqType = 3;
+        SendToGroupReqType = 4;
+    }
+    DataType dataType = 1;
+    oneof dataBody{
+        LoginReq loginReq = 2;
+        SendToUserReq sendToUserReq = 3;
+        CreateGroupReq createGroupReq = 4;
+        AddToGroupReq addToGroup = 5;
+        SendToGroupReq sendToGroup = 6;
+    }
+}
+message LoginReq{
+  string userName = 1;
+  string md5Pwd = 2;
+}
+message SendToUserReq{
+  string from = 1;
+  string to = 2;
+  string content = 3;
+}
+message CreateGroupReq{
+  string groupName = 1;
+}
+message AddToGroupReq{
+  string username = 1;
+  string groupName = 2;
+}
+message SendToGroupReq{
+  string username = 1;
+  string groupName = 2;
+  string content = 3;
+}
